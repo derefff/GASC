@@ -95,8 +95,77 @@ Token* get_next_token(Lexer* lexer)
       return temp_token;
     break;
 
+    case '+':
+      if(peek(lexer) == '+' && peek_by(lexer, 2) == '+' )
+      {
+        temp_token = create_token(TOKEN_ADD, "");
+        advance_lexer(lexer);
+      }
+      else if(peek(lexer) == '+' && peek_by(lexer, 2) != '+' )
+      {
+        temp_token = create_token(TOKEN_INCREMENT, "");
+        advance_lexer(lexer);
+        advance_lexer(lexer);
+      }
+      else
+      {
+        temp_token = create_token(TOKEN_ADD, "");
+        advance_lexer(lexer);
+      }
+
+      return temp_token;
+    break;
+
+    case '-':
+      if(peek(lexer) == '-' && peek_by(lexer, 2) == '-' )
+      {
+        temp_token = create_token(TOKEN_SUBTRACT, "");
+        advance_lexer(lexer);
+      }
+      else if(peek(lexer) == '-' && peek_by(lexer, 2) != '-' )
+      {
+        temp_token = create_token(TOKEN_DECREMENT, "");
+        advance_lexer(lexer);
+        advance_lexer(lexer);
+      }
+      else
+      {
+        temp_token = create_token(TOKEN_SUBTRACT, "");
+        advance_lexer(lexer);
+      }
+    break;
+
+    case '*':
+      temp_token = create_token(TOKEN_MULTIPLY, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case '/':
+      temp_token = create_token(TOKEN_DIVIDE, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case '=':
+      if(peek(lexer) != '=')
+      {
+        temp_token = create_token(TOKEN_ASSIGN, "");
+        advance_lexer(lexer);
+      }
+
+      if(peek(lexer) == '=')
+      {
+        temp_token = create_token(TOKEN_EQ, "");
+        advance_lexer(lexer);
+        advance_lexer(lexer);
+      }
+
+      return temp_token;
+    break;
+
     default:
-      temp_token =  create_token(TOKEN_INVALID, "Invalid Token at"+lexer->cursor);
+      temp_token =  create_token(TOKEN_INVALID, "Invalid Token at "+lexer->cursor);
       advance_lexer(lexer);
       return temp_token;
     break;
