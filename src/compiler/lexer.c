@@ -53,14 +53,18 @@ char* get_string_literal(Lexer* lexer)
 {
   char c = lexer->current_char;
   int literal_size = 1;
-  char* string_literal = malloc(sizeof(char));
+  char* string_literal = malloc(sizeof(char)*literal_size);
 
   while(lexer->current_char != '"')
   {
+    // printf("\t literal_string_current_char: %c \n", lexer->current_char);
+    advance_lexer(lexer);
     string_literal = realloc(string_literal, literal_size * sizeof(char));
     string_literal[literal_size] = lexer->current_char;
     literal_size++;
   }
+  advance_lexer(lexer);
+
   return string_literal;
 }
 
@@ -72,7 +76,7 @@ Token* get_next_token(Lexer* lexer)
   //TODO: take care of '\n'' char
   while(lexer->current_char == ' ' || lexer->current_char == '\t')
   {
-    skip_whitespaces(lexer, peek(lexer));
+    skip_whitespaces(lexer, lexer->current_char);
   }
 
   if (lexer->cursor >= lexer->content_len) {
@@ -82,12 +86,13 @@ Token* get_next_token(Lexer* lexer)
   Token* temp_token = (Token*)malloc(sizeof(Token));
   DEBUG_CURSOR_CHAR(lexer);
 
-  switch(peek(lexer))
+  switch(lexer->current_char)
   {
     case '"': //TODO 'lorem ipsum' would be also a string literal and ... char I guess
-      //FIXME: use get_string_literal() here
       advance_lexer(lexer);
-      return create_token(TOKEN_STRING_LITERAL, "...string value");
+      char* temp_str = get_string_literal(lexer);
+      temp_token = create_token(TOKEN_STRING_LITERAL, temp_str);
+      return temp_token;
     break;
 
     default:
