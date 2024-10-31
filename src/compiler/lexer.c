@@ -41,7 +41,12 @@ Token* create_token(token_t token_type, char* value)
 // look at current_character + 1, don't move cursor
 char peek(Lexer* lexer)
 {
-  return lexer->current_char;
+  return lexer->content[lexer->cursor+1];
+}
+
+char peek_by(Lexer* lexer, int offset)
+{
+  return lexer->content[lexer->cursor+offset];
 }
 
 void skip_by_lexer(Lexer* lexer, int offset)

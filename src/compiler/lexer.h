@@ -23,6 +23,7 @@ typedef struct
 Lexer* init_lexer(const char* content, long content_size);
 void advance_lexer(Lexer *lexer);
 char peek(Lexer* lexer);
+char peek_by(Lexer* lexer, int offset);
 void skip_by_lexer(Lexer* lexer, int offset);
 char* get_string_literal(Lexer* lexer);
 Token* get_next_token(Lexer* lexer);
