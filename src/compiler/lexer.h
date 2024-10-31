@@ -27,6 +27,7 @@ char peek_by(Lexer* lexer, int offset);
 void skip_by_lexer(Lexer* lexer, int offset);
 char* get_string_literal(Lexer* lexer);
 Token* get_next_token(Lexer* lexer);
+char* get_identfier(Lexer* lexer);
 Token* create_token(token_t token_type, char* value);
 
 

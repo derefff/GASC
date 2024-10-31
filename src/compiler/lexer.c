@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include "tokens.h"
@@ -54,6 +55,11 @@ void skip_by_lexer(Lexer* lexer, int offset)
   if(lexer->content_len < lexer->cursor+offset) lexer->cursor+=offset;
 }
 
+char* get_identfier(Lexer *lexer)
+{
+
+}
+
 char* get_string_literal(Lexer* lexer)
 {
   char c = lexer->current_char;
@@ -93,6 +99,13 @@ Token* get_next_token(Lexer* lexer)
   if (lexer->cursor >= lexer->content_len) {
       return create_token(TOKEN_EOF, "\0");
   }
+
+  if(isalpha(lexer->current_char))
+  {
+    printf("potential identifier ");
+   // get_identifier(lexer);
+  }
+
 
   Token* temp_token = (Token*)malloc(sizeof(Token));
 
