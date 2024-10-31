@@ -1,8 +1,8 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#include<stdlib.h>
 #include<stdint.h>
+#include<stdlib.h>
 #include "tokens.h"
 
 typedef struct {
@@ -20,15 +20,15 @@ typedef struct
   char* val;
 } Token;
 
-Lexer* init_lexer(const char* content, long content_size);
 void advance_lexer(Lexer *lexer);
+Token* create_token(token_t token_type, char* value);
+char* get_identfier(Lexer* lexer);
+Token* get_next_token(Lexer* lexer);
+char* get_string_literal(Lexer* lexer);
+Lexer* init_lexer(const char* content, long content_size);
 char peek(Lexer* lexer);
 char peek_by(Lexer* lexer, int offset);
 void skip_by_lexer(Lexer* lexer, int offset);
-char* get_string_literal(Lexer* lexer);
-Token* get_next_token(Lexer* lexer);
-char* get_identfier(Lexer* lexer);
-Token* create_token(token_t token_type, char* value);
 
 
 #endif

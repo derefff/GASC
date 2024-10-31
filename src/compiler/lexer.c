@@ -1,21 +1,12 @@
 #include <ctype.h>
+#include "lexer.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include "tokens.h"
-#include "lexer.h"
-#include <stdio.h>
 
 #define DEBUG_CURSOR_CHAR(lexer) \
     printf("cursor:%d \t char:\t %c\n", (lexer)->cursor, (lexer)->current_char)
-
-Lexer* init_lexer(const char *content, long content_len)
-{
-  Lexer *lexer = malloc(sizeof(Lexer));
-  lexer->cursor = 0;
-  lexer->content = content;
-  lexer->content_len = content_len;
-  return lexer;
-}
 
 void advance_lexer(Lexer *lexer)
 {
@@ -26,9 +17,13 @@ void advance_lexer(Lexer *lexer)
   }
 }
 
-void skip_whitespaces(Lexer* lexer, char current_char)
+Lexer* init_lexer(const char *content, long content_len)
 {
-  if(current_char == ' ' || current_char == '\t') advance_lexer(lexer);
+  Lexer *lexer = malloc(sizeof(Lexer));
+  lexer->cursor = 0;
+  lexer->content = content;
+  lexer->content_len = content_len;
+  return lexer;
 }
 
 Token* create_token(token_t token_type, char* value)
@@ -37,6 +32,11 @@ Token* create_token(token_t token_type, char* value)
   token->type = token_type;
   token->val = value;
   return token;
+}
+
+void skip_whitespaces(Lexer* lexer, char current_char)
+{
+  if(current_char == ' ' || current_char == '\t') advance_lexer(lexer);
 }
 
 // look at current_character + 1, don't move cursor
@@ -246,7 +246,6 @@ Token* get_next_token(Lexer* lexer)
       advance_lexer(lexer);
       return temp_token;
     break;
-
 
     default:
       DEBUG_CURSOR_CHAR(lexer);
