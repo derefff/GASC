@@ -84,12 +84,17 @@ Token* get_next_token(Lexer* lexer)
     skip_whitespaces(lexer, lexer->current_char);
   }
 
+  if(lexer->current_char == '\n')
+  {
+    advance_lexer(lexer);
+    //next line
+  }
+
   if (lexer->cursor >= lexer->content_len) {
       return create_token(TOKEN_EOF, "\0");
   }
 
   Token* temp_token = (Token*)malloc(sizeof(Token));
-  DEBUG_CURSOR_CHAR(lexer);
 
   switch(lexer->current_char)
   {
@@ -169,11 +174,72 @@ Token* get_next_token(Lexer* lexer)
       return temp_token;
     break;
 
+    case '(':
+      temp_token = create_token(TOKEN_OPEN_PARANTHESIS, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case ')':
+      temp_token = create_token(TOKEN_CLOSE_PARANTHESIS, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case '{':
+      temp_token = create_token(TOKEN_OPEN_BRACE, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case '}':
+      temp_token = create_token(TOKEN_CLOSE_BRACE, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case '[':
+      temp_token = create_token(TOKEN_OPEN_BRACKET, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case ']':
+      temp_token = create_token(TOKEN_CLOSE_BRACKET, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case ';':
+      temp_token = create_token(TOKEN_SEMICOLON, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case ':':
+      temp_token = create_token(TOKEN_COLON, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case '.':
+      temp_token = create_token(TOKEN_PERIOD, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+    case ',':
+      temp_token = create_token(TOKEN_COMMA, "");
+      advance_lexer(lexer);
+      return temp_token;
+    break;
+
+
     default:
+      DEBUG_CURSOR_CHAR(lexer);
       temp_token =  create_token(TOKEN_INVALID, "Invalid Token at "+lexer->cursor);
       advance_lexer(lexer);
       return temp_token;
     break;
   }
 }
-//TODO: peek_by(lex, offset)
