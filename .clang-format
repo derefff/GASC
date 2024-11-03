@@ -1,0 +1,56 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -2
+AlignAfterOpenBracket: Align
+AlignEscapedNewlines: Right
+AlignOperands: Align
+AlignTrailingComments: Always
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowBreakBeforeNoexceptSpecifier: Never
+AllowShortCompoundRequirementOnASingleLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All
+AllowShortLambdasOnASingleLine: All
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: MultiLine
+BinPackArguments: true
+BinPackParameters: true
+BitFieldColonSpacing: Both
+BraceWrapping:
+  AfterControlStatement: true
+  AfterFunction: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterEnum: true
+BreakBeforeBraces: Allman
+BreakBeforeBinaryOperators: None
+BreakBeforeConceptDeclarations: Always
+BreakBeforeTernaryOperators: true
+BreakConstructorInitializers: BeforeColon
+BreakInheritanceList: BeforeColon
+ColumnLimit: 80
+IndentWidth: 2
+IndentRequiresClause: true
+LambdaBodyIndentation: Signature
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PointerAlignment: Left
+ReflowComments: true
+SeparateDefinitionBlocks: Leave
+SortIncludes: CaseSensitive
+SpaceAfterTemplateKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyBlock: false
+SpacesBeforeTrailingComments: 1
+SpacesInContainerLiterals: true
+SpacesInLineCommentPrefix:
+  Minimum: 1
+SpacesInParens: Never
+Standard: Auto
+TabWidth: 4
+UseTab: Never
