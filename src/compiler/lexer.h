@@ -22,7 +22,7 @@ typedef struct
 
 void advance_lexer(Lexer *lexer);
 Token* create_token(token_t token_type, char* value);
-char* get_identfier(Lexer* lexer);
+char* get_identifier(Lexer* lexer);
 Token* get_next_token(Lexer* lexer);
 char* get_string_literal(Lexer* lexer);
 Lexer* init_lexer(const char* content, long content_size);

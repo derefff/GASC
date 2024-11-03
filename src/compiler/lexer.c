@@ -6,7 +6,7 @@
 #include "tokens.h"
 
 #define DEBUG_CURSOR_CHAR(lexer) \
-    printf("cursor:%d \t char:\t %c\n", (lexer)->cursor, (lexer)->current_char)
+    printf("cursor:%d \t char:\t %c\t ascii_form: %d \n", (lexer)->cursor, (lexer)->current_char, (lexer)->current_char)
 
 void advance_lexer(Lexer *lexer)
 {
@@ -55,9 +55,28 @@ void skip_by_lexer(Lexer* lexer, int offset)
   if(lexer->content_len < lexer->cursor+offset) lexer->cursor+=offset;
 }
 
-char* get_identfier(Lexer *lexer)
+char* get_identifier(Lexer* lexer)
 {
 
+  int identifier_name_length = 1;
+  char* identifier_name = malloc(sizeof(char) * identifier_name_length);
+
+  //while(lexer->current_char != ' ' && lexer->current_char != '\0' && lexer->current_char != '\t' || lexer->current_char != '\n')
+  while(isalnum(lexer->current_char) || lexer->current_char == '_')
+  {
+    if(lexer->cursor % identifier_name_length == 0)
+    {
+     // printf("cursor: %d\t ident_len: %d\t mod: %d\n", lexer->cursor, identifier_name_length,lexer->cursor % identifier_name_length );
+      identifier_name = realloc(identifier_name, identifier_name_length * sizeof(char));
+    }
+    identifier_name[identifier_name_length-1] = lexer->current_char;
+    identifier_name_length++;
+    // DEBUG_CURSOR_CHAR(lexer);
+    advance_lexer(lexer);
+  }
+  skip_by_lexer(lexer, identifier_name_length);
+
+  return identifier_name;
 }
 
 char* get_string_literal(Lexer* lexer)
@@ -69,10 +88,10 @@ char* get_string_literal(Lexer* lexer)
   while(lexer->current_char != '"')
   {
     // printf("\t literal_string_current_char: %c \n", lexer->current_char);
-    advance_lexer(lexer);
     string_literal = realloc(string_literal, literal_size * sizeof(char));
     string_literal[literal_size] = lexer->current_char;
     literal_size++;
+    advance_lexer(lexer);
   }
   advance_lexer(lexer);
 
@@ -82,6 +101,7 @@ char* get_string_literal(Lexer* lexer)
 Token* get_next_token(Lexer* lexer)
 {
   lexer->current_char = lexer->content[lexer->cursor];
+  Token* temp_token = (Token*)malloc(sizeof(Token));
 
   //FIXME: redundant: with skip_whitespaces()
   //TODO: take care of '\n'' char
@@ -89,6 +109,7 @@ Token* get_next_token(Lexer* lexer)
   {
     skip_whitespaces(lexer, lexer->current_char);
   }
+
 
   if(lexer->current_char == '\n')
   {
@@ -100,21 +121,20 @@ Token* get_next_token(Lexer* lexer)
       return create_token(TOKEN_EOF, "\0");
   }
 
-  if(isalpha(lexer->current_char))
+
+  if(isalpha(lexer->current_char) && !isdigit(lexer->current_char))
   {
-    printf("potential identifier ");
-   // get_identifier(lexer);
+    // printf("potential identifier %s \n", get_identifier(lexer));
+
+    return temp_token = create_token(TOKEN_ID, "");
+
   }
-
-
-  Token* temp_token = (Token*)malloc(sizeof(Token));
 
   switch(lexer->current_char)
   {
     case '"': //TODO 'lorem ipsum' would be also a string literal and ... char I guess
       advance_lexer(lexer);
-      char* temp_str = get_string_literal(lexer);
-      temp_token = create_token(TOKEN_STRING_LITERAL, temp_str);
+      temp_token = create_token(TOKEN_STRING_LITERAL, get_string_literal(lexer));
       return temp_token;
     break;
 
