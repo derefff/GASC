@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define DEBUG_CURSOR_CHAR(lexer) printf("cursor:%d \t char:\t %c\t ascii_form: %d \n", (lexer)->cursor, (lexer)->current_char, (lexer)->current_char)
 
@@ -62,7 +63,7 @@ char* get_comment_multi(Lexer* lexer)
   int buffer = 40;
   char* comment_text = malloc(sizeof(char) * buffer);
 
-  while(lexer->current_char != '*' && peek(lexer) != '/')
+  while (lexer->current_char != '*' && peek(lexer) != '/')
   {
     if (comment_length >= buffer)
     {
@@ -85,7 +86,7 @@ char* get_comment_single(Lexer* lexer)
   int buffer = 40;
   char* comment_text = malloc(sizeof(char) * buffer);
 
-  while(lexer->current_char != '\n')
+  while (lexer->current_char != '\n')
   {
     if (comment_length >= buffer)
     {
@@ -161,9 +162,24 @@ Token* get_next_token(Lexer* lexer)
 
   if (isalpha(lexer->current_char) && !isdigit(lexer->current_char))
   {
-    // printf("potential identifier %s \n", get_identifier(lexer));
+    // TODO: create more tokens
+    char* current_identfier = get_identifier(lexer);
 
-    return temp_token = create_token(TOKEN_ID, "");
+    if (strcmp(current_identfier, "function") == 0)
+    {
+      printf("jest funkcja\n");
+      return create_token(TOKEN_KEYWORD_FUNCTION, "");
+    }
+    else if (strcmp(current_identfier, "if") == 0)
+    {
+      printf("jest if\n");
+      return create_token(TOKEN_KEYWORD_IF, "");
+    }
+    else
+    {
+      // printf("identifier %s \n", curr_identfier);
+      return create_token(TOKEN_ID, "");
+    }
   }
 
   switch (lexer->current_char)
@@ -221,20 +237,20 @@ Token* get_next_token(Lexer* lexer)
     break;
 
   case '/':
-    if(peek(lexer) != '/' && peek(lexer) != '*')
+    if (peek(lexer) != '/' && peek(lexer) != '*')
     {
       temp_token = create_token(TOKEN_DIVIDE, "");
       advance_lexer(lexer);
       return temp_token;
     }
-    else if(peek(lexer) == '/')
+    else if (peek(lexer) == '/')
     {
       advance_lexer(lexer);
       advance_lexer(lexer);
       temp_token = create_token(TOKEN_COMMENT_SINGLE, get_comment_single(lexer));
       return temp_token;
     }
-    else if(peek(lexer) == '*')
+    else if (peek(lexer) == '*')
     {
       advance_lexer(lexer);
       advance_lexer(lexer);
