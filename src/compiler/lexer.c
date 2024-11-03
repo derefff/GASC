@@ -56,6 +56,52 @@ void skip_by_lexer(Lexer* lexer, int offset)
     lexer->cursor += offset;
 }
 
+char* get_comment_multi(Lexer* lexer)
+{
+  int comment_length = 0;
+  int buffer = 40;
+  char* comment_text = malloc(sizeof(char) * buffer);
+
+  while(lexer->current_char != '*' && peek(lexer) != '/')
+  {
+    if (comment_length >= buffer)
+    {
+      buffer *= 2;
+      comment_text = realloc(comment_text, buffer * sizeof(char));
+    }
+
+    comment_text[comment_length] = lexer->current_char;
+    comment_length++;
+    advance_lexer(lexer);
+  }
+  skip_by_lexer(lexer, comment_length + 2); // the "*/" the end
+
+  return comment_text;
+}
+
+char* get_comment_single(Lexer* lexer)
+{
+  int comment_length = 0;
+  int buffer = 40;
+  char* comment_text = malloc(sizeof(char) * buffer);
+
+  while(lexer->current_char != '\n')
+  {
+    if (comment_length >= buffer)
+    {
+      buffer *= 2;
+      comment_text = realloc(comment_text, buffer * sizeof(char));
+    }
+
+    comment_text[comment_length] = lexer->current_char;
+    comment_length++;
+    advance_lexer(lexer);
+  }
+  skip_by_lexer(lexer, comment_length + 1); // the \n the end
+
+  return comment_text;
+}
+
 char* get_identifier(Lexer* lexer)
 {
 
@@ -175,9 +221,26 @@ Token* get_next_token(Lexer* lexer)
     break;
 
   case '/':
-    temp_token = create_token(TOKEN_DIVIDE, "");
-    advance_lexer(lexer);
-    return temp_token;
+    if(peek(lexer) != '/' && peek(lexer) != '*')
+    {
+      temp_token = create_token(TOKEN_DIVIDE, "");
+      advance_lexer(lexer);
+      return temp_token;
+    }
+    else if(peek(lexer) == '/')
+    {
+      advance_lexer(lexer);
+      advance_lexer(lexer);
+      temp_token = create_token(TOKEN_COMMENT_SINGLE, get_comment_single(lexer));
+      return temp_token;
+    }
+    else if(peek(lexer) == '*')
+    {
+      advance_lexer(lexer);
+      advance_lexer(lexer);
+      temp_token = create_token(TOKEN_COMMENT_MULTI, get_comment_multi(lexer));
+      return temp_token;
+    }
     break;
 
   case '=':

@@ -22,6 +22,8 @@ typedef struct
 
 void advance_lexer(Lexer *lexer);
 Token* create_token(token_t token_type, char* value);
+char* get_comment_multi(Lexer* lexer);
+char* get_comment_single(Lexer* lexer);
 char* get_identifier(Lexer* lexer);
 Token* get_next_token(Lexer* lexer);
 char* get_string_literal(Lexer* lexer);
