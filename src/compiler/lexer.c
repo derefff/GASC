@@ -34,9 +34,14 @@ Token* create_token(token_t token_type, char* value)
   return token;
 }
 
-void skip_whitespaces(Lexer* lexer, char current_char)
+// handling whitespaces and new line symbol '\n'
+void skip_whitespaces(Lexer* lexer)
 {
-  if(current_char == ' ' || current_char == '\t') advance_lexer(lexer);
+  while(lexer->current_char == ' ' || lexer->current_char == '\t' || lexer->current_char == '\n')
+  {
+    if(lexer->current_char == ' ' || lexer->current_char == '\t') advance_lexer(lexer);
+    if(lexer->current_char == '\n') advance_lexer(lexer);
+  }
 }
 
 // look at current_character + 1, don't move cursor
@@ -103,19 +108,8 @@ Token* get_next_token(Lexer* lexer)
   lexer->current_char = lexer->content[lexer->cursor];
   Token* temp_token = (Token*)malloc(sizeof(Token));
 
-  //FIXME: redundant: with skip_whitespaces()
-  //TODO: take care of '\n'' char
-  while(lexer->current_char == ' ' || lexer->current_char == '\t')
-  {
-    skip_whitespaces(lexer, lexer->current_char);
-  }
+  skip_whitespaces(lexer);
 
-
-  if(lexer->current_char == '\n')
-  {
-    advance_lexer(lexer);
-    //next line
-  }
 
   if (lexer->cursor >= lexer->content_len) {
       return create_token(TOKEN_EOF, "\0");
