@@ -165,15 +165,45 @@ Token* get_next_token(Lexer* lexer)
     // TODO: create more tokens
     char* current_identfier = get_identifier(lexer);
 
-    if (strcmp(current_identfier, "function") == 0)
+    if (strcmp(current_identfier, "const") == 0)
     {
-      printf("jest funkcja\n");
+      return create_token(TOKEN_KEYWORD_CONST, "");
+    }
+    else if (strcmp(current_identfier, "do") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_DO, "");
+    }
+    else if (strcmp(current_identfier, "else") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_ELSE, "");
+    }
+    else if (strcmp(current_identfier, "for") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_FOR, "");
+    }
+    else if (strcmp(current_identfier, "function") == 0)
+    {
       return create_token(TOKEN_KEYWORD_FUNCTION, "");
     }
     else if (strcmp(current_identfier, "if") == 0)
     {
-      printf("jest if\n");
       return create_token(TOKEN_KEYWORD_IF, "");
+    }
+    else if (strcmp(current_identfier, "return") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_RETURN, "");
+    }
+    else if (strcmp(current_identfier, "var") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_VAR, "");
+    }
+    else if (strcmp(current_identfier, "void") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_VOID, "");
+    }
+    else if (strcmp(current_identfier, "while") == 0)
+    {
+      return create_token(TOKEN_KEYWORD_WHILE, "");
     }
     else
     {
