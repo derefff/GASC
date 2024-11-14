@@ -12,7 +12,7 @@ AllowAllParametersOfDeclarationOnNextLine: true
 AllowBreakBeforeNoexceptSpecifier: Never
 AllowShortCompoundRequirementOnASingleLine: true
 AllowShortEnumsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: All
+AllowShortFunctionsOnASingleLine: None
 AllowShortLambdasOnASingleLine: All
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
@@ -35,6 +35,7 @@ BreakInheritanceList: BeforeColon
 ColumnLimit: 160
 IndentWidth: 2
 IndentRequiresClause: true
+IndentCaseLabels: true
 LambdaBodyIndentation: Signature
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 19
