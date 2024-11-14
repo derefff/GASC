@@ -1,7 +1,7 @@
+#include "parser.h"
 #include "AST.h"
 #include "lexer.h"
-#include "parser.h"
-
+#include <stdio.h>
 
 Parser* init_parser(Lexer* lexer)
 {
@@ -24,10 +24,24 @@ ASTNode* parse_term(Parser* parser);
 void expect_token(Parser* parser, token_t token_type);
 */
 
-void expect_token(Parser *parser, token_t token_type)
+void expect_token(Parser* parser, token_t token_type)
 {
-  if(parser->current_token->type != token_type)
+  if (parser->current_token->type != token_type)
   {
     printf("Error: didn't expect excalty that type of token");
   }
+}
+
+ASTNode* parse_program(Parser* parser)
+{
+  ASTNode* program = create_ast_node(AST_PROGRAM, NULL);
+
+  while (parser->current_token->type != TOKEN_EOF)
+  {
+    // TODO: create parse_statement function
+    ASTNode* statement = parse_statement(parser);
+    add_child_to_node(program, statement);
+  }
+
+  return program;
 }
