@@ -17,7 +17,7 @@ ASTNode* parse_statement(Parser* parser);
 ASTNode* parse_expression(Parser* parser);
 ASTNode* parse_term(Parser* parser);
 void advance_parser(Parser* parser);
-void expect_token(Parser* parser, token_t token_type);
+void consume_token(Parser* parser, token_t expected_token_type);
 
 
 #endif

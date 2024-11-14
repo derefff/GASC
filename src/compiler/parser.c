@@ -24,12 +24,13 @@ ASTNode* parse_term(Parser* parser);
 void expect_token(Parser* parser, token_t token_type);
 */
 
-void expect_token(Parser* parser, token_t token_type)
+void consume_token(Parser* parser, token_t expected_token_type)
 {
-  if (parser->current_token->type != token_type)
+  if (parser->current_token->type != expected_token_type)
   {
     printf("Error: didn't expect excalty that type of token");
   }
+  advance_parser(parser);
 }
 
 ASTNode* parse_program(Parser* parser)
