@@ -2,6 +2,7 @@
 #define AST_H
 
 #include "lexer.h"
+#include "tokens.h"
 #include<stdlib.h>
 
 typedef enum {
@@ -18,8 +19,15 @@ typedef enum {
   AST_IDENTIFIER
 } ASTNodeType;
 
-typedef struct {
-
+typedef struct ASTNode {
+  ASTNodeType type;
+  struct ASTNode** children;
+  int child_count;
+  Token* token;
 } ASTNode;
+
+ASTNode* create_ast_node(ASTNodeType type, Token* token);
+void add_child_to_node(ASTNode* parent, ASTNode* child);
+void free_ast(ASTNode* node);
 
 #endif
