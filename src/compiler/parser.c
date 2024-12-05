@@ -193,6 +193,7 @@ ASTNode* parse_expression(Parser* parser)
 
     node = op_node;
   }
+  return node;
 }
 
 ASTNode* parse_program(Parser* parser)
