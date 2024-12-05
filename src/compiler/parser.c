@@ -41,33 +41,32 @@ bool match_token(Parser* parser, token_t token_type)
 
 ASTNode* parse_statement(Parser* parser)
 {
-  switch(parser->current_token->type)
+  switch (parser->current_token->type)
   {
-    case TOKEN_KEYWORD_CONST:
+  case TOKEN_KEYWORD_CONST:
     break;
 
-    case TOKEN_KEYWORD_DO:
+  case TOKEN_KEYWORD_DO:
     break;
 
-    case TOKEN_KEYWORD_FOR:
+  case TOKEN_KEYWORD_FOR:
     break;
 
-    case TOKEN_KEYWORD_FUNCTION:
+  case TOKEN_KEYWORD_FUNCTION:
     break;
 
-    case TOKEN_KEYWORD_IF:
+  case TOKEN_KEYWORD_IF:
     break;
 
-    case TOKEN_KEYWORD_VAR:
+  case TOKEN_KEYWORD_VAR:
     break;
 
-    case TOKEN_KEYWORD_WHILE:
+  case TOKEN_KEYWORD_WHILE:
     break;
 
-    default:
-      return parse_expression(parser);
+  default:
+    return parse_expression(parser);
     break;
-
   }
 }
 
@@ -80,42 +79,42 @@ ASTNode* parse_statement(Parser* parser)
 ASTNode* parse_literal(Parser* parser)
 {
   ASTNode* literal = (ASTNode*)malloc(sizeof(ASTNode));
-  switch(parser->current_token->type)
+  switch (parser->current_token->type)
   {
-    case TOKEN_FLOAT:
-      literal = create_ast_node(AST_LITERAL, parser->current_token);
-      advance_parser(parser);
-      return literal;
+  case TOKEN_FLOAT:
+    literal = create_ast_node(AST_LITERAL, parser->current_token);
+    advance_parser(parser);
+    return literal;
     break;
 
-    case TOKEN_INTEAGER:
-      literal = create_ast_node(AST_LITERAL, parser->current_token);
-      advance_parser(parser);
-      return literal;
+  case TOKEN_INTEAGER:
+    literal = create_ast_node(AST_LITERAL, parser->current_token);
+    advance_parser(parser);
+    return literal;
     break;
 
-    case TOKEN_BOOL_TRUE:
-      literal = create_ast_node(AST_LITERAL, parser->current_token);
-      advance_parser(parser);
-      return literal;
+  case TOKEN_BOOL_TRUE:
+    literal = create_ast_node(AST_LITERAL, parser->current_token);
+    advance_parser(parser);
+    return literal;
     break;
 
-    case TOKEN_BOOL_FALSE:
-      literal = create_ast_node(AST_LITERAL, parser->current_token);
-      advance_parser(parser);
-      return literal;
+  case TOKEN_BOOL_FALSE:
+    literal = create_ast_node(AST_LITERAL, parser->current_token);
+    advance_parser(parser);
+    return literal;
     break;
 
-    case TOKEN_STRING_LITERAL:
-      literal = create_ast_node(AST_LITERAL, parser->current_token);
-      advance_parser(parser);
-      return literal;
+  case TOKEN_STRING_LITERAL:
+    literal = create_ast_node(AST_LITERAL, parser->current_token);
+    advance_parser(parser);
+    return literal;
     break;
 
-    case TOKEN_NULL:
-      literal = create_ast_node(AST_LITERAL, parser->current_token);
-      advance_parser(parser);
-      return literal;
+  case TOKEN_NULL:
+    literal = create_ast_node(AST_LITERAL, parser->current_token);
+    advance_parser(parser);
+    return literal;
     break;
   }
 }
@@ -131,18 +130,68 @@ ASTNode* parse_literal(Parser* parser)
 <term>       ::= <factor> ( ("*" | "/") <factor> )*
 <factor>     ::= <literal> | <identifier> | "(" <expression> ")"
 */
-ASTNode* parse_expression(Parser* parser)
+
+//<factor>     ::= <literal> | <identifier> | "(" <expression> ")"
+ASTNode* parse_factor(Parser* parser)
 {
-  return parse_term(parser);
+  if (parser->current_token->type == TOKEN_FLOAT || parser->current_token->type == TOKEN_INTEAGER || parser->current_token->type == TOKEN_STRING_LITERAL ||
+      parser->current_token->type == TOKEN_BOOL_TRUE || parser->current_token->type == TOKEN_BOOL_FALSE)
+  {
+    parse_literal(parser);
+  }
+
+  if (parser->current_token->type == TOKEN_ID)
+  {
+    ASTNode* ID_node = create_ast_node(AST_IDENTIFIER, parser->current_token);
+    consume_token(parser, TOKEN_ID);
+    return ID_node;
+  }
+  if (parser->current_token->type == TOKEN_OPEN_PARANTHESIS)
+  {
+    consume_token(parser, TOKEN_OPEN_PARANTHESIS);
+    ASTNode* expression_node = parse_expression(parser);
+    consume_token(parser, TOKEN_CLOSE_PARANTHESIS);
+    return expression_node;
+  }
 }
 
+//<term>       ::= <factor> ( ("*" | "/") <factor> )*
 ASTNode* parse_term(Parser* parser)
 {
-  if(parser->current_token->type == TOKEN_STRING_LITERAL)
+  ASTNode* node = parse_factor(parser);
+
+  while (parser->current_token->type == TOKEN_MULTIPLY || parser->current_token->type == TOKEN_DIVIDE)
   {
-    ASTNode* literal_node = create_ast_node(AST_LITERAL, parser->current_token);
-    advance_parser(parser);
-    return literal_node;
+    Token* op_token = parser->current_token;
+    consume_token(parser, op_token->type);
+
+    ASTNode* op_node = create_ast_node(AST_BINARY_OP, op_token);
+    ASTNode* right_node = parse_factor(parser);
+    add_child_to_node(op_node, node);       // left node
+    add_child_to_node(op_node, right_node); // right_node
+
+    node = op_node;
+  }
+
+  return node;
+}
+// TODO: add other <binary_oparators>, <function_call>
+//<expression> ::= <term> ( ("+" | "-") <term> )*
+ASTNode* parse_expression(Parser* parser)
+{
+  ASTNode* node = parse_term(parser);
+
+  while (parser->current_token->type == TOKEN_MULTIPLY || parser->current_token->type == TOKEN_DIVIDE)
+  {
+    Token* op_token = parser->current_token;
+    consume_token(parser, op_token->type);
+
+    ASTNode* op_node = create_ast_node(AST_BINARY_OP, op_token);
+    ASTNode* right_node = parse_factor(parser);
+    add_child_to_node(op_node, node);       // left node
+    add_child_to_node(op_node, right_node); // right_node
+
+    node = op_node;
   }
 }
 
