@@ -4,6 +4,7 @@
 #include "AST.h"
 #include "lexer.h"
 #include "tokens.h"
+#include <stdbool.h>
 
 typedef struct
 {
@@ -11,13 +12,15 @@ typedef struct
   Token* current_token;
 } Parser;
 
+void advance_parser(Parser* parser);
+void consume_token(Parser* parser, token_t expected_token_type);
 Parser* init_parser(Lexer* lexer);
+bool match_token(Parser* parser, token_t type);
+ASTNode* parse_literal(Parser* parser);
 ASTNode* parse_program(Parser* parser);
 ASTNode* parse_statement(Parser* parser);
 ASTNode* parse_expression(Parser* parser);
 ASTNode* parse_term(Parser* parser);
-void advance_parser(Parser* parser);
-void consume_token(Parser* parser, token_t expected_token_type);
 
 
 #endif
