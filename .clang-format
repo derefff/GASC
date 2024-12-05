@@ -21,7 +21,7 @@ BinPackArguments: true
 BinPackParameters: true
 BitFieldColonSpacing: Both
 BraceWrapping:
-  AfterControlStatement: true
+  AfterControlStatement: false
   AfterFunction: true
   AfterStruct: true
   AfterUnion: true
@@ -35,7 +35,7 @@ BreakInheritanceList: BeforeColon
 ColumnLimit: 160
 IndentWidth: 2
 IndentRequiresClause: true
-IndentCaseLabels: true
+IndentCaseLabels: false
 LambdaBodyIndentation: Signature
 PenaltyBreakAssignment: 2
 PenaltyBreakBeforeFirstCallParameter: 19
