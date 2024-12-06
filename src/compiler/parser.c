@@ -209,3 +209,20 @@ ASTNode* parse_program(Parser* parser)
 
   return program;
 }
+
+// <return_statement> ::= "return" <expression>? ";"
+ASTNode* parse_return_statement(Parser* parser)
+{
+  consume_token(parser, TOKEN_KEYWORD_RETURN);
+
+  ASTNode* return_node = create_ast_node(AST_RETURN_STATEMENT, parser->current_token);
+
+  if (parser->current_token->type != TOKEN_SEMICOLON)
+  {
+    ASTNode* exp_node = parse_expression(parser);
+    add_child_to_node(return_node, exp_node);
+  }
+  consume_token(parser, TOKEN_SEMICOLON);
+
+  return return_node;
+}

@@ -19,6 +19,7 @@ bool match_token(Parser* parser, token_t type);
 ASTNode* parse_factor(Parser* parser);
 ASTNode* parse_literal(Parser* parser);
 ASTNode* parse_program(Parser* parser);
+ASTNode* parse_return_statement(Parser* parser);
 ASTNode* parse_statement(Parser* parser);
 ASTNode* parse_expression(Parser* parser);
 ASTNode* parse_term(Parser* parser);
