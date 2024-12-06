@@ -16,6 +16,7 @@ void advance_parser(Parser* parser);
 void consume_token(Parser* parser, token_t expected_token_type);
 Parser* init_parser(Lexer* lexer);
 bool match_token(Parser* parser, token_t type);
+ASTNode* parse_assignment(Parser* parser);
 ASTNode* parse_factor(Parser* parser);
 ASTNode* parse_literal(Parser* parser);
 ASTNode* parse_program(Parser* parser);

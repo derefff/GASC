@@ -226,3 +226,24 @@ ASTNode* parse_return_statement(Parser* parser)
 
   return return_node;
 }
+
+// <assignment> ::= <identifier> "=" <expression>
+ASTNode* parse_assignment(Parser* parser)
+{
+  ASTNode* assignment_node = create_ast_node(AST_ASSIGNMENT, parser->current_token);
+
+  // NOTE: sometime in the future make sure to peek for TOKEN_ID + TOKEN_ASSIGN
+  if (match_token(parser, TOKEN_ID))
+  {
+    ASTNode* id_node = create_ast_node(AST_IDENTIFIER, parser->current_token);
+    add_child_to_node(assignment_node, id_node);
+    consume_token(parser, TOKEN_ID);
+    consume_token(parser, TOKEN_ASSIGN);
+
+    ASTNode* exp_node = parse_expression(parser);
+    add_child_to_node(assignment_node, exp_node);
+    consume_token(parser, TOKEN_SEMICOLON);
+
+    return assignment_node;
+  }
+}
