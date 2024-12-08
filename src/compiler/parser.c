@@ -87,7 +87,7 @@ ASTNode* parse_literal(Parser* parser)
     return literal;
     break;
 
-  case TOKEN_INTEAGER:
+  case TOKEN_INTEGER:
     literal = create_ast_node(AST_LITERAL, parser->current_token);
     advance_parser(parser);
     return literal;

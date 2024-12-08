@@ -32,9 +32,9 @@ Token* create_token(token_t token_type, char* value)
   Token* token = malloc(sizeof(Token));
   token->type = token_type;
 
-  if(token_type == TOKEN_INTEAGER)
+  if(token_type == TOKEN_INTEGER)
   {
-    token->val_inteager = atoi(value);
+    token->val_integer = atoi(value);
   }
   else if(token_type == TOKEN_FLOAT)
   {
@@ -269,7 +269,7 @@ Token* get_next_token(Lexer* lexer)
 
 
     if(is_float) return create_token(TOKEN_FLOAT, numeric_literal);
-    return create_token(TOKEN_INTEAGER, numeric_literal);
+    return create_token(TOKEN_INTEGER, numeric_literal);
 
   }
 
