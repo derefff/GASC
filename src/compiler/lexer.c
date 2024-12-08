@@ -1,6 +1,7 @@
 #include "lexer.h"
 #include "tokens.h"
 #include <ctype.h>
+#include "stdbool.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,9 +31,32 @@ Token* create_token(token_t token_type, char* value)
 {
   Token* token = malloc(sizeof(Token));
   token->type = token_type;
-  token->val = value;
+
+  if(token_type == TOKEN_INTEAGER)
+  {
+    token->val_inteager = atoi(value);
+  }
+  else if(token_type == TOKEN_FLOAT)
+  {
+    token->val_float = strtod(value, NULL);
+  }
+  else
+  {
+    token->val = value;
+  }
   return token;
 }
+
+int is_numeric_end(char c) {
+    return c == ' ' || c == '\n' || c == '\t' ||
+           c == ',' || c == ';' || c == ':' ||
+           c == '+' || c == '-' || c == '*' || c == '/' || c == '%' ||
+           c == '(' || c == ')' || c == '[' || c == ']' ||
+           c == '=' || c == '&' || c == '|' || c == '<' || c == '>' ||
+           c == '\'' || c == '\"' || c == '\\' ||
+           c == '\0';
+}
+
 
 // handling whitespaces and new line symbol '\n'
 void skip_whitespaces(Lexer* lexer)
@@ -210,6 +234,43 @@ Token* get_next_token(Lexer* lexer)
       // printf("identifier %s \n", curr_identfier);
       return create_token(TOKEN_ID, "");
     }
+  }
+
+  if(isdigit(lexer->current_char))
+  {
+    int literal_index = 1;
+    int buffer_size = 4;
+    bool is_float = false;
+    char* numeric_literal = malloc(sizeof(char)*10);
+
+    while(!is_numeric_end(lexer->current_char) && !isalpha(lexer->current_char))
+    {
+      //DEBUG_CURSOR_CHAR(lexer);
+      if (literal_index >= buffer_size - 1) {
+          buffer_size *= 2;
+          numeric_literal = realloc(numeric_literal, buffer_size * sizeof(char));
+      }
+
+      if(lexer->current_char != '.')
+      {
+        numeric_literal[literal_index] = lexer->current_char;
+      }
+      else
+      {
+        if(!is_float)
+        {
+          is_float = true;
+          numeric_literal[literal_index] = lexer->current_char;
+        }
+      }
+      advance_lexer(lexer);
+      literal_index++;
+    }
+
+
+    if(is_float) return create_token(TOKEN_FLOAT, numeric_literal);
+    return create_token(TOKEN_INTEAGER, numeric_literal);
+
   }
 
   switch (lexer->current_char)

@@ -17,7 +17,12 @@ typedef struct {
 typedef struct
 {
   token_t type;
-  char* val;
+  union
+  {
+    char* val;
+    double val_float;
+    int val_integer;
+  };
 } Token;
 
 void advance_lexer(Lexer *lexer);
